@@ -1,36 +1,35 @@
 import React from "react";
-import {
-  CssBaseline,
-  AppBar,
-  Toolbar,
-  Typography,
-  Button
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { CssBaseline } from "@material-ui/core";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { getConfig } from "./config";
+import { Security, SecureRoute, ImplicitCallback } from "@okta/okta-react";
+import { AuthProvider } from "./Auth/AuthProvider";
+import { Header } from "./Components/Header";
+import { TempPage } from "./Pages/TempPage";
 
-const useStyles = makeStyles(() => ({
-  title: {
-    flexGrow: 1,
-    textAlign: "left"
-  }
-}));
-
-const App: React.FC = () => {
-  const classes = useStyles();
-
+export const App: React.FC = () => {
+  const oktaConfig = getConfig().okta;
+  const implicitCallbackPath = "/implicit/callback";
+  const redirectUri =
+    window.location.origin + process.env.PUBLIC_URL + implicitCallbackPath;
   return (
-    <div className="App">
-      <CssBaseline />
-      <AppBar>
-        <Toolbar>
-          <Typography variant="h6" className={classes.title}>
-            Home
-          </Typography>
-          <Button color="inherit">Login</Button>
-        </Toolbar>
-      </AppBar>
-    </div>
+    <BrowserRouter>
+      <Security
+        issuer={oktaConfig.endpoint}
+        clientId={oktaConfig.clientId}
+        redirectUri={redirectUri}
+      >
+        <AuthProvider>
+          <CssBaseline />
+          <Header />
+          <Switch>
+            <Route path={implicitCallbackPath}>
+              <ImplicitCallback />
+            </Route>
+            <SecureRoute path="/" component={TempPage} />
+          </Switch>
+        </AuthProvider>
+      </Security>
+    </BrowserRouter>
   );
 };
-
-export default App;
