@@ -21,7 +21,6 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
     "format": "prettier --write \"**/*.+(js|jsx|json|css|md|scss|ts|tsx)\""
   },
   "eslintConfig": {
@@ -48,7 +47,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run format"
+      "pre-commit": "npm run format; git add ."
     }
   }
 }
