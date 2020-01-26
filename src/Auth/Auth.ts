@@ -16,6 +16,9 @@ export type Auth = {
   };
   // This requires a server call. It will be undefined until that call completes successfully.
   bearerToken?: string;
+  logout: () => void;
 };
 
-export const AuthContext = React.createContext<Auth>({});
+export const AuthContext = React.createContext<Auth>({
+  logout: () => {}
+});
